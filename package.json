@@ -1,0 +1,8 @@
+{
+  "name": "jujutsu.js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:monarchjhaveri/jujutsu.js.git",
+  "author": "Monarch Wadia <monarchwadia@gmail.com>",
+  "license": "MIT"
+}
