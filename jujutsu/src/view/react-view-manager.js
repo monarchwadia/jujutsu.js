@@ -7,7 +7,6 @@ export default class ReactViewManager {
   }
 
   init() {
-    debugger;
     ReactDom.render(this.options.element, this.options.container);  
   }
 }
