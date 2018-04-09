@@ -71,14 +71,26 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./jujutsu/src/analytics/google-analytics-manager.js":
+/*!***********************************************************!*\
+  !*** ./jujutsu/src/analytics/google-analytics-manager.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("class GoogleAnalyticsManager {\n  constructor(uaCode=null) {\n    this.uaCode = uaCode;\n  }\n\n  init() {\n    if (!this.uaCode) {\n      console.debug(\"No Google Analytics code inserted\");\n      return;\n    }\n    // google analytics snippet from: \n    // https://developers.google.com/analytics/devguides/collection/analyticsjs/#the_javascript_tracking_snippet\n    // slightly modified since we aren't directly pasting a <script> tag\n    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\n    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\n    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\n    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');\n\n    window.ga('create', 'UA-XXXXX-Y', 'auto');\n    window.ga('send', 'pageview');\n  }\n}\n\nmodule.exports = GoogleAnalyticsManager;\n\n//# sourceURL=webpack:///./jujutsu/src/analytics/google-analytics-manager.js?");
+
+/***/ }),
+
 /***/ "./jujutsu/src/jujutsu.js":
 /*!********************************!*\
   !*** ./jujutsu/src/jujutsu.js ***!
   \********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-eval("function parseOptions(options) {\n  return options;\n}\n\nclass Jujutsu {\n  constructor(options) {\n    this.options = parseOptions(options);\n  }\n}\n\nmodule.exports = Jujutsu;\n\n\n//# sourceURL=webpack:///./jujutsu/src/jujutsu.js?");
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Jujutsu; });\n/* harmony import */ var deepmerge__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! deepmerge */ \"./node_modules/deepmerge/dist/es.js\");\n/* harmony import */ var _analytics_google_analytics_manager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./analytics/google-analytics-manager */ \"./jujutsu/src/analytics/google-analytics-manager.js\");\n/* harmony import */ var _analytics_google_analytics_manager__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_analytics_google_analytics_manager__WEBPACK_IMPORTED_MODULE_1__);\n\n\n\nconst defaultOptions = {\n  analytics: {\n    google: {\n      uaCode: null\n    }\n  }\n}\n\nfunction parseOptions(options={}) {\n  return Object(deepmerge__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(defaultOptions, options);\n}\n\nclass Jujutsu {\n  constructor(options) {\n    this.options = parseOptions(options);\n  }\n\n  init() {\n    this.analytics = {\n      google: (new _analytics_google_analytics_manager__WEBPACK_IMPORTED_MODULE_1___default.a(this.options.analytics.google)).init()\n    };\n  }\n}\n\n\n//# sourceURL=webpack:///./jujutsu/src/jujutsu.js?");
 
 /***/ }),
 
@@ -103,6 +115,18 @@ eval("\n\nmodule.exports = ansiHTML\n\n// Reference to https://github.com/sindre
 
 "use strict";
 eval("\nmodule.exports = function () {\n\treturn /[\\u001b\\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-PRZcf-nqry=><]/g;\n};\n\n\n//# sourceURL=webpack:///./node_modules/ansi-regex/index.js?");
+
+/***/ }),
+
+/***/ "./node_modules/deepmerge/dist/es.js":
+/*!*******************************************!*\
+  !*** ./node_modules/deepmerge/dist/es.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\nvar isMergeableObject = function isMergeableObject(value) {\n\treturn isNonNullObject(value)\n\t\t&& !isSpecial(value)\n};\n\nfunction isNonNullObject(value) {\n\treturn !!value && typeof value === 'object'\n}\n\nfunction isSpecial(value) {\n\tvar stringValue = Object.prototype.toString.call(value);\n\n\treturn stringValue === '[object RegExp]'\n\t\t|| stringValue === '[object Date]'\n\t\t|| isReactElement(value)\n}\n\n// see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25\nvar canUseSymbol = typeof Symbol === 'function' && Symbol.for;\nvar REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;\n\nfunction isReactElement(value) {\n\treturn value.$$typeof === REACT_ELEMENT_TYPE\n}\n\nfunction emptyTarget(val) {\n\treturn Array.isArray(val) ? [] : {}\n}\n\nfunction cloneUnlessOtherwiseSpecified(value, options) {\n\treturn (options.clone !== false && options.isMergeableObject(value))\n\t\t? deepmerge(emptyTarget(value), value, options)\n\t\t: value\n}\n\nfunction defaultArrayMerge(target, source, options) {\n\treturn target.concat(source).map(function(element) {\n\t\treturn cloneUnlessOtherwiseSpecified(element, options)\n\t})\n}\n\nfunction mergeObject(target, source, options) {\n\tvar destination = {};\n\tif (options.isMergeableObject(target)) {\n\t\tObject.keys(target).forEach(function(key) {\n\t\t\tdestination[key] = cloneUnlessOtherwiseSpecified(target[key], options);\n\t\t});\n\t}\n\tObject.keys(source).forEach(function(key) {\n\t\tif (!options.isMergeableObject(source[key]) || !target[key]) {\n\t\t\tdestination[key] = cloneUnlessOtherwiseSpecified(source[key], options);\n\t\t} else {\n\t\t\tdestination[key] = deepmerge(target[key], source[key], options);\n\t\t}\n\t});\n\treturn destination\n}\n\nfunction deepmerge(target, source, options) {\n\toptions = options || {};\n\toptions.arrayMerge = options.arrayMerge || defaultArrayMerge;\n\toptions.isMergeableObject = options.isMergeableObject || isMergeableObject;\n\n\tvar sourceIsArray = Array.isArray(source);\n\tvar targetIsArray = Array.isArray(target);\n\tvar sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;\n\n\tif (!sourceAndTargetTypesMatch) {\n\t\treturn cloneUnlessOtherwiseSpecified(source, options)\n\t} else if (sourceIsArray) {\n\t\treturn options.arrayMerge(target, source, options)\n\t} else {\n\t\treturn mergeObject(target, source, options)\n\t}\n}\n\ndeepmerge.all = function deepmergeAll(array, options) {\n\tif (!Array.isArray(array)) {\n\t\tthrow new Error('first argument should be an array')\n\t}\n\n\treturn array.reduce(function(prev, next) {\n\t\treturn deepmerge(prev, next, options)\n\t}, {})\n};\n\nvar deepmerge_1 = deepmerge;\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (deepmerge_1);\n\n\n//# sourceURL=webpack:///./node_modules/deepmerge/dist/es.js?");
 
 /***/ }),
 
