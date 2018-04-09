@@ -11,6 +11,11 @@ module.exports = {
   plugins: [
     new WriteFilePlugin()
   ],
+  module: {
+    rules: [
+      { test: /\.jsx?$/, exclude: /node_modules/, loader: "babel-loader" }
+    ]
+  },
   devServer: {
     contentBase: path.resolve(__dirname, "dist")
   }

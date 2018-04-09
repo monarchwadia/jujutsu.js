@@ -1,6 +1,6 @@
 class GoogleAnalyticsManager {
-  constructor(uaCode=null) {
-    this.uaCode = uaCode;
+  constructor(options) {
+    this.uaCode = {options};
   }
 
   init() {
