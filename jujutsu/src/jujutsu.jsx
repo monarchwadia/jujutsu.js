@@ -1,6 +1,8 @@
 import merge from 'deepmerge';
 import GoogleAnalyticsManager from './analytics/google-analytics-manager';
-import ReactViewManager from './view/react-view-manager';
+import React, { Component } from 'react';
+import ReactDom from 'react-dom';
+import PropTypes from 'prop-types';
 
 function dig(target, keyString) {
   const keys = keyString.split('.');
@@ -23,11 +25,6 @@ function dig(target, keyString) {
   return cursor;
 }
 
-function validateOptions(options) {
-  if (!options.view.element) throw Error("view.element must be defined");
-  if (!options.view.container) throw Error("view.container must be defined");
-}
-
 function parseOptions(options={}) {
   return {
     analytics: {
@@ -42,17 +39,32 @@ function parseOptions(options={}) {
   }
 }
 
+const instance = {};
+const JJContext = React.createContext(instance);
+export { JJContext as JJContext };
+
+export class Partial extends React.Component {
+  render() {
+    return (
+      <JJContext.Consumer>
+        {
+          (jj) => { console.log("HERE's JJ!", jj); return this.props.children }
+        }
+      </JJContext.Consumer>
+    )
+  }
+}
+
 export default class Jujutsu {
   constructor(options) {
     this.options = parseOptions(options);
-    validateOptions(this.options);
+    instance['jj'] = this;
   }
 
-  init() {
-    const g = (new GoogleAnalyticsManager(this.options.analytics.google)).init();
-    this.options.analytics.google.manager = g;
+  render(element, container) {
+    this.options.analytics.google.manager = 
+      (new GoogleAnalyticsManager(this.options.analytics.google)).init();
 
-    const v = (new ReactViewManager(this.options.view)).init();
-    this.options.view.manager = v;
-  }
+    ReactDom.render(element, container);
+   }
 }

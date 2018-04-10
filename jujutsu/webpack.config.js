@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   mode: "development",
-  entry: path.resolve(__dirname, "src/jujutsu.js"),
+  entry: path.resolve(__dirname, "src/jujutsu.jsx"),
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "jujutsu.js"
